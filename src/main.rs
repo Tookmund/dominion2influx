@@ -22,7 +22,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         .from_reader(io::stdin());
     for result in reader.deserialize() {
         let domday: DomDay = result?;
-        eprintln!("{:?}", domday);
 
         let mut datetime = OffsetDateTime::now_local().unwrap()
             .replace_date(domday.date)
