@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("dominion,account={account},recorder={recorder} kwh={kwh} {datetime}",
                   account = domday.account,
                   recorder = domday.recorder,
-                  datetime = datetime.unix_timestamp(),
+                  datetime = datetime.unix_timestamp_nanos(),
                   kwh = kwh
                 );
             datetime = datetime.checked_add(Duration::minutes(30))
