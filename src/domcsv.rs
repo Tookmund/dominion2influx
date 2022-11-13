@@ -35,7 +35,7 @@ impl fmt::Display for DomDay {
             )?;
             datetime = datetime
                 .checked_add(Duration::minutes(30))
-                .expect(&std::format!("Too many intervals for day {}", self.date))
+                .unwrap_or_else(|| panic!("Too many intervals for day {}", self.date))
         }
         Ok(())
     }
