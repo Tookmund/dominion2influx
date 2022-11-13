@@ -2,7 +2,7 @@ use std::io;
 use std::error::Error;
 
 use ::serde::Deserialize;
-use time::{serde,Date,OffsetDateTime,Duration,format_description::well_known::Rfc3339};
+use time::{serde,Date,OffsetDateTime,Duration};
 
 
 serde::format_description!(us_date, Date, "[month]/[day padding:none]/[year]");
@@ -17,10 +17,6 @@ struct DomDay {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    println!("#datatype,_measurement,string,dateTime:RFC3339,double
-#group,true,false,false,false
-#default,,,,
-,_measurement,_field,_time,_value");
     let mut reader = csv::ReaderBuilder::new()
         .has_headers(false)
         .from_reader(io::stdin());
@@ -35,11 +31,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             .replace_second(0).unwrap();
 
         for kwh in domday.kwh {
-            println!(",{account},{recorder},{datetime},{kwh}",
+            println!("dominion,account={account},recorder={recorder} kwh={kwh} {datetime}",
                   account = domday.account,
                   recorder = domday.recorder,
-                  datetime = datetime.format(&Rfc3339)
-                  .expect(&std::format!("Invalid datetime: {}", datetime)),
+                  datetime = datetime.unix_timestamp(),
                   kwh = kwh
                 );
             datetime = datetime.checked_add(Duration::minutes(30))
